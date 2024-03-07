@@ -180,7 +180,6 @@ const answerInput = document.getElementById("answerInput");
 const resultElement = document.getElementById("result");
 const nextBtn = document.getElementById("nextBtn");
 const finalMessage = document.getElementById("finalMessage");
-let userAnswers = []; // Array to store user answers
 
 function showQuestion(question) {
   questionElement.innerText = question.question;
@@ -189,14 +188,7 @@ function showQuestion(question) {
 
 function checkAnswer() {
   const userAnswer = answerInput.value.trim().toLowerCase();
-  const isCorrect = userAnswer === quizData[currentQuestion].correct.toLowerCase();
-  userAnswers.push({
-    question: quizData[currentQuestion].question,
-    userAnswer: userAnswer,
-    correctAnswer: quizData[currentQuestion].correct,
-    isCorrect: isCorrect
-  });
-  if (isCorrect) {
+  if (userAnswer === quizData[currentQuestion].correct.toLowerCase()) {
     resultElement.innerText = quizData[currentQuestion].message;
   } else {
     resultElement.innerText = "Answer is wrong! Dhyan se soch kar answer kare.";
@@ -213,9 +205,56 @@ function nextQuestion() {
   } else {
     quizContainer.style.display = "none";
     finalMessage.style.display = "block";
-    console.log("User Answers:", userAnswers); // Log user answers to console
     // Heart Animation Code Below
-    // ...
+    const hearts = [];
+    const pinks = ["#ff748c", "#ff8da1", "#ffa7b6"];
+
+    class Heart {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.theta = Math.random() * Math.PI * 2;
+        const heartEl = document.createElement("div");
+        heartEl.classList.add("heart");
+        document.body.append(heartEl);
+        const color = pinks[parseInt(Math.random() * pinks.length)];
+        heartEl.style.background = color;
+
+        const heartLeftEl = document.createElement("div");
+        heartLeftEl.classList.add('left');
+        heartLeftEl.style.background = color;
+        heartEl.appendChild(heartLeftEl);
+
+        const heartRightEl = document.createElement("div");
+        heartRightEl.classList.add('right');
+        heartRightEl.style.background = color;
+        heartEl.appendChild(heartRightEl);
+
+        this.el = heartEl;
+
+        setTimeout(() => {
+          this.el.remove();
+          hearts.splice(hearts.indexOf(this), 1);
+        }, 10000)
+      }
+
+      update() {
+        this.x += Math.cos(this.theta) * 1;
+        this.y += 1;
+        this.theta += 0.01;
+        this.el.style.left = `${this.x}px`;
+        this.el.style.top = `${this.y}px`;
+      }
+    }
+
+    setInterval(() => {
+      const heart = new Heart(Math.random() * window.innerWidth, -100);
+      hearts.push(heart);
+    }, 200);
+
+    setInterval(() => {
+      hearts.forEach((heart) => heart.update());
+    }, 10);
   }
 }
 
