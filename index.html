@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>😶‍🌫️</title>
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: pink;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.quiz-form {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  width: 60%;
+  max-width: 500px;
+}
+
+input[type="text"] {
+  width: calc(100% - 30px);
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px; /* added margin-top */
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+.heart {
+  width: 50px;
+  height: 50px;
+  background: red;
+  transform: rotate(45deg);
+  position: absolute;
+}
+
+.heart .left {
+  content: '';
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: red;
+  position: absolute;
+  left: -25px;
+  top: 0px;
+}
+
+.heart .right {
+  content: '';
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: red;
+  position: absolute;
+  left: 0px;
+  top: -25px;
+}
+
+h1, h2 {
+  color: white;
+  position: relative;
+}
+
+.panel {
+  z-index: 1;
+  padding: 40px;
+  background: rgba( 255, 154, 154, 0.10 );
+  box-shadow: 0 8px 32px 0 pink;
+  backdrop-filter: blur( 10.5px );
+  -webkit-backdrop-filter: blur( 10.5px );
+  border-radius: 20px;
+}
+
+#question {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+#result {
+  font-size: 18px; /* increased font size */
+}
+</style>
+</head>
+<body>
+<div id="quiz" class="quiz-form">
+  <h1>Simple Quiz</h1>
+  <div id="question"></div>
+  <input type="text" id="answerInput" placeholder="Type your answer here...">
+  <div id="result"></div>
+  <button class="btn" onclick="checkAnswer()">Submit</button>
+  <button id="nextBtn" class="btn" style="display: none;" onclick="nextQuestion()">Next</button>
+</div>
+
+<div id="finalMessage" class="panel" style="display: none;">
+  <h2>Agar ye message padh rahi ho to iska matlab sab answer theek dediye hai aapne</h2>
+  <h2>Ye itne saare dil aapke liye or bs itna kehna tha ki</h2>
+  <h1>I LOVE YOU 😘😘😘😘😘</h1>
+</div>
+
+<script>
+const quizData = [
+  {
+    question: "Apka naam kya hai?",
+    correct: "Aqsa",
+    message: "Ary doodd, To agla ques tabhi dikhega jab answer correct hoga, chaliye fir aage badhte hai or aapka memory test karte hai (Answer sabka one word hai)"
+  },
+  {
+    question: "Hum pehli baar kaha mile (Jaha aap jaati thi or me bhi)?",
+    correct: "Tution",
+    message: "Nicee, ye hint samjhane ke liye tha ki kese chalega aage to ab se no hint!"
+  },
+  {
+    question: "Relation me aane ke baad pehli baar kaha mile the?",
+    correct: "Nani",
+    message: "Arryy dood, memory achi hai aapki, chaliye aage badhte hai!"
+  },
+  {
+    question: "Apko ek dusra naam diya tha mene wo kya tha?",
+    correct: "Baqsa",
+    message: "🤣😂, Chaliye next ki taraf ab mushkile badhegi!"
+  },
+  {
+    question: "Milte he kya kara tha pehli baar jab mile the relation me aane ke baad?",
+    correct: "Hug",
+    message: "Bachi ki tarah bhaagte huye utri thi aap😁 , aage badhiye"
+  },
+  {
+    question: "Uske baad kya kara tha?",
+    correct: "Kiss",
+    message: "🤭🤭 Sharmaiye mat itna! Ab jab aapke itne delicious lips honge to resist nhi kar paya tha me"
+  },
+  {
+    question: "Aap hot hai sirf ya bohot hot ya fir hottest hai?",
+    correct: "Hottest",
+    message: "🤒🤒 Sahi baat hai agr me aapko chu lu to fir mujhe bukhar hojata hai"
+  },
+  {
+    question: "Kya wo ek chees ho sakti hai jo mjhe aapki bohot pasandh ho (Vese to sab hai pr on top kya hoga)?",
+    correct: "Boobs",
+    message: "🫣🫣 Me kuch nhi bol rha aage badhte hai"
+  },
+  {
+    question: "Mujhe ans dekh kar sharam aagai 🤭 ab nhi poocha jaa rha or, to aage badhne ke liye Type:Next?",
+    correct: "Next",
+    message: "Dhyan se next pr click krna"
+  }
+];
+
+let currentQuestion = 0;
+const quizContainer = document.getElementById("quiz");
+const questionElement = document.getElementById("question");
+const answerInput = document.getElementById("answerInput");
+const resultElement = document.getElementById("result");
+const nextBtn = document.getElementById("nextBtn");
+const finalMessage = document.getElementById("finalMessage");
+
+function showQuestion(question) {
+  questionElement.innerText = question.question;
+  answerInput.value = "";
+}
+
+function checkAnswer() {
+  const userAnswer = answerInput.value.trim().toLowerCase();
+  if (userAnswer === quizData[currentQuestion].correct.toLowerCase()) {
+    resultElement.innerText = quizData[currentQuestion].message;
+  } else {
+    resultElement.innerText = "Your answer is wrong! Please try again.";
+  }
+  nextBtn.style.display = "inline-block";
+}
+
+function nextQuestion() {
+  resultElement.innerText = "";
+  nextBtn.style.display = "none";
+  if (currentQuestion < quizData.length - 1) {
+    currentQuestion++;
+    showQuestion(quizData[currentQuestion]);
+  } else {
+    quizContainer.style.display = "none";
+    finalMessage.style.display = "block";
+    // Heart Animation Code Below
+    const hearts = [];
+    const pinks = ["#ff748c", "#ff8da1", "#ffa7b6"];
+
+    class Heart {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.theta = Math.random() * Math.PI * 2;
+        const heartEl = document.createElement("div");
+        heartEl.classList.add("heart");
+        document.body.append(heartEl);
+        const color = pinks[parseInt(Math.random() * pinks.length)];
+        heartEl.style.background = color;
+
+        const heartLeftEl = document.createElement("div");
+        heartLeftEl.classList.add('left');
+        heartLeftEl.style.background = color;
+        heartEl.appendChild(heartLeftEl);
+
+        const heartRightEl = document.createElement("div");
+        heartRightEl.classList.add('right');
+        heartRightEl.style.background = color;
+        heartEl.appendChild(heartRightEl);
+
+        this.el = heartEl;
+
+        setTimeout(() => {
+          this.el.remove();
+          hearts.splice(hearts.indexOf(this), 1);
+        }, 10000)
+      }
+
+      update() {
+        this.x += Math.cos(this.theta) * 1;
+        this.y += 1;
+        this.theta += 0.01;
+        this.el.style.left = `${this.x}px`;
+        this.el.style.top = `${this.y}px`;
+      }
+    }
+
+    setInterval(() => {
+      const heart = new Heart(Math.random() * window.innerWidth, -100);
+      hearts.push(heart);
+    }, 200);
+
+    setInterval(() => {
+      hearts.forEach((heart) => heart.update());
+    }, 10);
+  }
+}
+
+showQuestion(quizData[currentQuestion]);
+</script>
+</body>
+</html>
