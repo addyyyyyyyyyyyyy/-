@@ -228,13 +228,6 @@ function nextQuestion() {
         document.body.append(heartEl);
         const color = pinks[parseInt(Math.random() * pinks.length)];
         heartEl.style.background = color;
-        // Create and add the name element
-        const nameEl = document.createElement("div");
-        nameEl.classList.add("name");
-        nameEl.innerText = "Aqsa";
-        heartEl.appendChild(nameEl);
-
-        document.body.append(heartEl);
 
         const heartLeftEl = document.createElement("div");
         heartLeftEl.classList.add('left');
