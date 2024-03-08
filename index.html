@@ -199,11 +199,13 @@ function checkAnswer() {
   const userAnswer = answerInput.value.trim().toLowerCase();
   if (userAnswer === quizData[currentQuestion].correct.toLowerCase()) {
     resultElement.innerText = quizData[currentQuestion].message;
+    nextBtn.style.display = "inline-block"; // Show next button only if the answer is correct
   } else {
     resultElement.innerText = "Answer is wrong! Dhyan se soch kar answer kare.";
+    nextBtn.style.display = "none"; // Hide next button if the answer is wrong
   }
-  nextBtn.style.display = "none";
 }
+
 
 function nextQuestion() {
   resultElement.innerText = "";
