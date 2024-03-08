@@ -239,13 +239,14 @@ function nextQuestion() {
         heartRightEl.style.background = color;
         heartEl.appendChild(heartRightEl);
 
-        const nameEl = document.createElement("div");
-        nameEl.classList.add("name");
-        nameEl.innerText = "Aqsa";
-        heartEl.appendChild(nameEl);
+// Inside the Heart class constructor
+const nameEl = document.createElement("div");
+nameEl.classList.add("name");
+nameEl.innerText = "Aqsa"; // Change this to the desired name
+heartEl.appendChild(nameEl); // Append the name to the heart element
 
-        
-        this.el = heartEl;
+this.el = heartEl;
+
 
         setTimeout(() => {
           this.el.remove();
