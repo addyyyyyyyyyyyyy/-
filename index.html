@@ -239,6 +239,12 @@ function nextQuestion() {
         heartRightEl.style.background = color;
         heartEl.appendChild(heartRightEl);
 
+        const nameEl = document.createElement("div");
+        nameEl.classList.add("name");
+        nameEl.innerText = "Aqsa";
+        heartEl.appendChild(nameEl);
+
+        
         this.el = heartEl;
 
         setTimeout(() => {
